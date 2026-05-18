@@ -12,6 +12,11 @@ MORTALIDAD_FILE = DATA_DIR / "datos_mortalidad.xlsx"
 CAUSAS_FILE = DATA_DIR / "codigos_causas_muerte.xlsx"
 DIVIPOLA_FILE = DATA_DIR / "division_politico_administrativa.xlsx"
 
+PROCESSED_DIR = DATA_DIR / "processed"
+MORTALIDAD_PKL = PROCESSED_DIR / "mortalidad.pkl"
+CAUSAS_PKL = PROCESSED_DIR / "causas.pkl"
+DIVIPOLA_PKL = PROCESSED_DIR / "divipola.pkl"
+
 
 def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -119,6 +124,13 @@ def normalize_sex(value: object) -> str:
 
 @lru_cache(maxsize=1)
 def load_data() -> Dict[str, pd.DataFrame]:
+
+    if MORTALIDAD_PKL.exists() and CAUSAS_PKL.exists() and DIVIPOLA_PKL.exists():
+        return {
+            "mortalidad": pd.read_pickle(MORTALIDAD_PKL),
+            "causas": pd.read_pickle(CAUSAS_PKL),
+            "divipola": pd.read_pickle(DIVIPOLA_PKL),
+        }
     """
     Carga, limpia y prepara los datos principales del proyecto.
 
